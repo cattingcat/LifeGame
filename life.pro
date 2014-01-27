@@ -13,9 +13,12 @@ TARGET = life
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    threadhelper.cpp \
+    graphicswidget.cpp
 
 HEADERS  += mainwindow.h \
-    graphicswidget.h
+    graphicswidget.h \
+    threadhelper.h
 
 FORMS    += mainwindow.ui
