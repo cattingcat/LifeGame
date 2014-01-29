@@ -15,31 +15,66 @@ class ThreadHelper;
 class GraphicsWidget: public QWidget{
     Q_OBJECT
 private:
-    std::vector<std::vector<bool>> field;
-    std::list<std::vector<std::vector<bool>>> log;
-    uint column_count;
-    uint row_count;
-    uint max_log_length;
-    ThreadHelper *thr;
+    std::vector<std::vector<bool>>* field;
+
+public:
+    GraphicsWidget(): field(nullptr){
+
+    }
+
+protected:
+    int calcCellSize(){
+        int w = this->width();
+        int h = this->height();
+        int min_dimension = w > h ? h : w;
+        min_dimension -= min_dimension % field->size();
+        int cell_size = min_dimension / field->size();
+        return cell_size;
+    }
+
+    virtual void paintEvent(QPaintEvent*) override {
+        QPainter p(this);
+        if(field != nullptr && !field->empty()){
+            int cell_size = calcCellSize();
+            int next_vert = 0;
+            int next_hor = 0;
+
+            int columns = field->size();
+            int rows = field->begin()->size();
+
+            for(int i = 0; i < columns; ++i, next_vert += cell_size){
+                p.drawLine(next_vert, 0, next_vert, columns * cell_size);
+                next_hor = 0;
+                for(int j = 0; j < rows; ++j, next_hor += cell_size){
+                    p.drawLine(0, next_hor, rows * cell_size, next_hor);
+                    if((*field)[i][j])
+                        p.fillRect(next_vert, next_hor, cell_size, cell_size, Qt::SolidPattern);
+                }
+            }
+            p.drawLine(next_vert, 0, next_vert, columns * cell_size);
+            p.drawLine(0, next_hor, rows * cell_size, next_hor);
+        }
+    }
+
+    virtual void mousePressEvent(QMouseEvent *e) override {
+        int cell_size = calcCellSize();
+        int columns = field->size();
+        int rows = field->begin()->size();
+
+        if(e->x() < columns * cell_size && e->y() < rows * cell_size){
+            int column = e->x() / cell_size;
+            int row = e->y() / cell_size;
+            bool b = (*field)[column][row];
+            (*field)[column][row] = !b;
+            repaint();
+        }
+    }
 
 public:    
-    GraphicsWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
-    ~GraphicsWidget();
-
-private:
-    int calcCellSize();
-    void paintEvent(QPaintEvent*);
-    void mousePressEvent(QMouseEvent *e);
-    std::vector<std::vector<bool>> createField();
-    void calculateNext();
-    int calculateNeighbor(int x, int y);
-
-public slots:
-    void setField(std::vector<std::vector<bool>> m);
-    std::vector<std::vector<bool>> getField();
-    void next();
-
-    friend class ThreadHelper;
+    void setField(std::vector<std::vector<bool>>* _field){
+        field = _field;
+        repaint();
+    }
 };
 
 #endif
