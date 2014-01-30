@@ -9,6 +9,7 @@
 #include "graphicswidget.h"
 #include "OpenGLGraphics.h"
 #include <LifeEngine.h>
+#include <ctime>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT    
@@ -31,7 +32,7 @@ public:
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(30, 30);
+        le = new LifeEngine(100, 100);
         gw->setField(le->get_field());
 
 
@@ -52,8 +53,13 @@ private slots:
         //oglg->drawLifeLog(gw->getLog());
     }
     void nextTimer(){
+        clock_t c1 = clock();
         auto a = le->next();
+        clock_t c2 = clock();
         gw->setField(a);
+        clock_t c3 = clock();
+
+        std::cout<< "next(): " << c2 - c1 << "  setField(): " << c3 - c2 <<std::endl;
     }
 
 

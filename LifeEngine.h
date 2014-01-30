@@ -30,7 +30,6 @@ public:
             len = size_x - start - 1;
         for(uint x = start; x < start + len; ++x){
             for(uint y = 1; y < size_y - 1; ++y){
-                std::cout<<x << " " << y <<std::endl;
                 (*field)[x][y] = false;
                 int nc = calculateNeighbor(x, y);
                 if((!(*last_field)[x][y]) && nc == 3)
@@ -62,7 +61,6 @@ public:
         uint block_len = 5;
         for(uint x = 1; x < size_x - 1; ++x){
             for(uint y = 1; y < size_y - 1; ++y){
-                std::cout<<x << " " << y <<std::endl;
                 (*field)[x][y] = false;
                 int nc = calculateNeighbor(x, y);
                 if((!(*last_field)[x][y]) && nc == 3)
