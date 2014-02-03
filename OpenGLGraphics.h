@@ -13,11 +13,10 @@ private:
     int h_window;
     int w;
     int h;
-    std::list<std::vector<std::vector<bool>>> _log;
-    std::vector<std::vector<bool>> _field;
+    std::vector<std::vector<bool>>* _field;
 
 public:
-    OpenGLGraphics(QWidget* parent = 0): QGLWidget(parent){
+    OpenGLGraphics(QWidget* parent = 0): QGLWidget(parent), _field(nullptr){
         w = 1000;
         h = 1000;
     }
@@ -34,33 +33,32 @@ protected:
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glViewport(0, 0, w_window, h_window);
-        glOrtho(0, w, h, 0, -1000, 1);
+        glOrtho(0, w, h, 0, -1, 1);
     }
 
     virtual void paintGL(){
-        //glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        if(!_field.empty()){
-            int n = _field.size();
+        if(_field != nullptr && !_field->empty()){
+            int n = _field->size();
             int blocksz = w / n;
             int cube_size = (double)blocksz * 3.0 / 4.0;
             int cube_margin = blocksz - cube_size;
 
-            for(int i = 0; i < _field.size(); ++i){
-                for(int j = 0; j < _field.begin()->size(); ++j){
+            for(int i = 0; i < n; ++i){
+                for(int j = 0; j < n; ++j){
                     int x = blocksz * i;
                     int y = blocksz * j;
-                    if(_field[i][j])
+                    if((*_field)[i][j])
                         drawSquare(x, y, 0, cube_size);
                 }
             }
         }
-        glFinish();
+        //glFinish();
     }
 
-private:
     void drawSquare(int x, int y, int z, int size){
         glBegin(GL_QUADS);
         glColor3f(1, 0, 0);
@@ -74,16 +72,10 @@ private:
         glEnd();
     }
 
-
 public:
-    void drawLifeLog(std::list<std::vector<std::vector<bool>>> log){
-        _log = log;
-        updateGL();
-    }
-
-    void drawField(std::vector<std::vector<bool>> fld){
-        _field = fld;
-        updateGL();
+    void setField(std::vector<std::vector<bool>>* field){
+        _field = field;
+        repaint();
     }
 };
 

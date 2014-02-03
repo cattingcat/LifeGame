@@ -32,7 +32,7 @@ public:
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(100, 100);
+        le = new LifeEngine(70, 70);
         gw->setField(le->get_field());
 
 
@@ -57,6 +57,7 @@ private slots:
         auto a = le->next();
         clock_t c2 = clock();
         gw->setField(a);
+        oglg->setField(a);
         clock_t c3 = clock();
 
         std::cout<< "next(): " << c2 - c1 << "  setField(): " << c3 - c2 <<std::endl;
