@@ -92,7 +92,7 @@ public:
         std::vector<std::vector<bool>>* m = new std::vector<std::vector<bool>>(size_x);
         for(uint i = 0; i < m->size(); ++i){
             (*m)[i] = std::move(std::vector<bool>(size_y));
-            for(int j = 0; j < (*m)[i].size(); ++j){
+            for(uint j = 0; j < (*m)[i].size(); ++j){
                 (*m)[i][j] = false;
             }
         }

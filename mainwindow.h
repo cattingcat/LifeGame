@@ -32,35 +32,45 @@ public:
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(70, 70);
+        le = new LifeEngine(170, 170);
         gw->setField(le->get_field());
-
+        oglg->setField(le->get_field());
 
         connect(timer, SIGNAL(timeout()), this, SLOT(nextTimer()));
-        connect(ui->startBtn, SIGNAL(clicked()), timer, SLOT(start()));
-        connect(ui->finishBtn, SIGNAL(clicked()), timer, SLOT(stop()));
-        connect(ui->loadLogBtn, SIGNAL(clicked()), this, SLOT(loadLogSlot()));
+        connect(ui->actionStart, SIGNAL(triggered()), timer, SLOT(start()));
+        connect(ui->actionStop, SIGNAL(triggered()), timer, SLOT(stop()));
+        connect(ui->actionRandomize, SIGNAL(triggered()), this, SLOT(randomize()));
     }
 
     ~MainWindow(){
         delete ui;
         delete le;
     }
+private:
+    void randomizeField(std::vector<std::vector<bool>>* field){
+        int columns = field->size();
+        int rows = field->begin()->size();
+        for(int i = 0; i < columns; ++i){
+            for(int j = 0; j < rows; ++j){
+                (*field)[i][j] = (qrand() % 3 == 0);
+            }
+        }
+    }
 
 private slots:
-    void loadLogSlot(){
-        std::cout<<"load log "<<std::endl;
-        //oglg->drawLifeLog(gw->getLog());
-    }
     void nextTimer(){
-        clock_t c1 = clock();
+        //clock_t c1 = clock();
         auto a = le->next();
-        clock_t c2 = clock();
+        //clock_t c2 = clock();
         gw->setField(a);
         oglg->setField(a);
-        clock_t c3 = clock();
+        //clock_t c3 = clock();
+        //std::cout<< "next(): " << c2 - c1 << "  setField(): " << c3 - c2 <<std::endl;
+    }
 
-        std::cout<< "next(): " << c2 - c1 << "  setField(): " << c3 - c2 <<std::endl;
+    void randomize(){
+        auto field = le->get_field();
+        randomizeField(field);
     }
 
 
