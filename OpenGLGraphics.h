@@ -28,7 +28,14 @@ protected:
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glViewport(0, 0, width, height);
-        glOrtho(0, w, h, 0, -1, 1);
+        float tmp = (float)width / height;
+        if(width > height){
+            glOrtho(0, w * tmp, h, 0, -1, 1);
+            //w = (float)w * tmp;
+        } else {
+            glOrtho(0, w, h * tmp, 0, -1, 1);
+            //h = (float)h * tmp;
+        }
     }
 
     virtual void paintGL() override{

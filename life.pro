@@ -18,7 +18,8 @@ SOURCES += main.cpp
 HEADERS  += mainwindow.h \
     graphicswidget.h \
     OpenGLGraphics.h \
-    LifeEngine.h
+    LifeEngine.h \
+    ogl_history.h
 
 FORMS    += mainwindow.ui
 
