@@ -10,6 +10,7 @@
 #include "OpenGLGraphics.h"
 #include <LifeEngine.h>
 #include <ctime>
+#include <ogl_history.h>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT    
@@ -17,8 +18,9 @@ private:
     QTimer *timer;
     Ui::MainWindow *ui;
     OpenGLGraphics *oglg;
+    HistoryWidget *hw;
     GraphicsWidget *gw;
-    LifeEngine *le;
+    LifeEngine *le; 
 
 public:
     MainWindow(QWidget *parent = 0): QMainWindow(parent), ui(new Ui::MainWindow){
@@ -28,6 +30,9 @@ public:
 
         oglg = new OpenGLGraphics();
         ui->tab2Layout->addWidget(oglg);
+
+        hw = new HistoryWidget();
+        ui->tab3Layout->addWidget(hw);
 
         timer = new QTimer(this);
         timer->setInterval(100);
@@ -72,9 +77,6 @@ private slots:
         auto field = le->get_field();
         randomizeField(field);
     }
-
-
-
 };
 
 #endif
