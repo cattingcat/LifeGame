@@ -7,7 +7,7 @@ typedef unsigned int uint;
 
 #define ASYNC_CALC_NEXT
 
-class LifeEngine{
+class LifeEngine {
 private:
     std::vector<std::vector<bool>> field;
     std::list<std::vector<std::vector<bool>>> log;
@@ -23,7 +23,7 @@ public:
         max_log_length = 50;
     }
 
-public:
+private:
 #ifdef ASYNC_CALC_NEXT
     void threadFoo(std::vector<std::vector<bool>>* last_field, uint start, uint len){
         if(start + len >= size_x - 1)
@@ -99,6 +99,7 @@ public:
         return m;
     }
 
+public:
     std::vector<std::vector<bool>>* next(){
         if(log.size() < max_log_length){
             log.push_back(std::move(field));
@@ -119,6 +120,7 @@ public:
         return &log;
     }
 
+#ifdef DEBUG
     void print(){
         for(uint x = 1; x < size_x - 1; ++x){
             for(uint y = 1; y < size_y - 1; ++y){
@@ -128,7 +130,6 @@ public:
         }
         std::cout<<std::endl;
     }
-
+#endif
 };
-
 #endif

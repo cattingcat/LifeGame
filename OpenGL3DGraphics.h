@@ -2,12 +2,11 @@
 #define OGL_3D
 #include <QGLWidget>
 #include <QKeyEvent>
-#include <GL/glu.h>
 #include <iostream>
 #include <list>
 #include <vector>
 
-class HistoryWidget: public QGLWidget{
+class HistoryWidget: public QGLWidget {
     Q_OBJECT
 private:
     float angle_x;
@@ -90,7 +89,8 @@ protected:
         repaint();
     }
 
-    virtual void mousePressEvent(QMouseEvent *e) override {
+    virtual void mousePressEvent(QMouseEvent *) override {
+        //TODO
     }
 
 private:

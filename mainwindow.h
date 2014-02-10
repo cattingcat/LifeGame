@@ -70,7 +70,6 @@ private slots:
         gw->setField(a);
         oglg->setField(a);
         hw->setLog(le->get_log());
-
     }
 
     void randomize(){

@@ -22,6 +22,3 @@ HEADERS  += mainwindow.h \
     OpenGL3DGraphics.h
 
 FORMS    += mainwindow.ui
-
-OTHER_FILES += \
-    222.vsh
