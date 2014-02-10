@@ -4,6 +4,8 @@
 #include <QKeyEvent>
 #include <GL/glu.h>
 #include <iostream>
+#include <list>
+#include <vector>
 
 class HistoryWidget: public QGLWidget{
     Q_OBJECT
@@ -16,13 +18,21 @@ private:
 
     int c_size;
 
+    std::list<std::vector<std::vector<bool>>*>* log;
+
 public:
     HistoryWidget(QWidget* parent = 0): QGLWidget(parent){
         angle_x = 0.0f;
         angle_y =  0.0f;
         angle_z = 0.0f;
         z = -250.0f;
+        log = nullptr;
         this->setFocusPolicy(Qt::StrongFocus);
+    }
+
+    void setLog(std::list<std::vector<std::vector<bool>>*>* l){
+        log = l;
+        repaint();
     }
 
 protected:
@@ -48,40 +58,43 @@ protected:
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-/*
+
         glColor4ub(1, 100, 1, 50);
         glBegin(GL_LINES);
-            glVertex3i(-1000, -10, 0);
-            glVertex3i(1000, -10, 0);
+            glVertex3i(-1000, -10, -20);
+            glVertex3i(1000, -10, -20);
             glVertex3i(0, -10, -1000);
             glVertex3i(0, -10, 1000);
         glEnd();
-*/
+
 
         glTranslatef(0, 0, z);
         glRotatef(angle_x, 1.0f, 0.0f, 0.0f);
         glRotatef(angle_y, 0.0f, 1.0f, 0.0f);
         glRotatef(angle_z, 0.0f, 0.0f, 1.0f);
-        drawMultiCube(200, 15);
+        if(log == nullptr){
+            drawRandomMultiCube(200, 20);
+        } else {
+            drawLog(200);
+        }
     }
 
     virtual void keyPressEvent(QKeyEvent *e) override {
         int k = e->key();
         if(k == Qt::Key_W){
-            angle_x += 1.f;
+            angle_x += 2.f;
         } else if(k == Qt::Key_S){
-            angle_x -= 1.f;
+            angle_x -= 2.f;
         } else if(k == Qt::Key_A){
-            angle_y += 1.f;
+            angle_y += 2.f;
         } else if (k == Qt::Key_D){
-            angle_y -= 1.f;
+            angle_y -= 2.f;
         } else if(k == Qt::Key_Q){
-            angle_z += 1.f;
+            angle_z += 2.f;
         } else if(k == Qt::Key_E){
-            angle_z -= 1.f;
+            angle_z -= 2.f;
         } else if(k == Qt::Key_Up){
             z += 5;
-            std::cout<<z << std::endl;
         } else if(k == Qt::Key_Down){
             z -= 5;
         }
@@ -128,7 +141,7 @@ private:
         glEnd();
     }
 
-    void drawMultiCube(int sz, int n = 20){
+    void drawRandomMultiCube(int sz, int n = 20){
         int margin = 1;
         float block = sz / n;
         glMatrixMode(GL_MODELVIEW);
@@ -147,6 +160,45 @@ private:
                         glColor3ub((int)ix % 255, (int)iy % 255, (int)iz % 255);
                         drawCude(block - margin);
                     }
+                    glPopMatrix();
+                }
+                glPopMatrix();
+            }
+            glPopMatrix();
+        }
+        glPopMatrix();
+    }
+
+    void drawLog(int sz){
+        int n = (**(log->begin())).size();
+        float block = (float)sz / n;
+        int margin = 1;
+
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glTranslated(-sz / 2.0, -sz / 2.0, -sz / 2.0);
+        // TODO
+        typedef std::vector<std::vector<bool>> layer;
+        float iz = 0.0f;
+        for(auto it = log->rbegin(); it != log->rend() && iz < sz ; ++it, iz += block){
+            layer* l = *it;
+            std::cout<< l->size() << " " << l->begin()->size() << std::endl;
+
+            glPushMatrix();
+            glTranslatef(0, 0, iz);
+
+            for(int ix = 0; ix < n; ++ix){
+                glPushMatrix();
+                glTranslatef(ix * block, 0.0f, 0.0f);
+                for(int iy = 0; iy < n; ++iy){
+                    glPushMatrix();
+                    glTranslatef(0.0f, iy * block, 0.0f);
+
+                    if((*l)[iy][ix]){
+                        glColor3ub((int)(ix * block) % 255, (int)(iy * block) % 255, (int)iz % 255);
+                        drawCude(block - margin);
+                    }
+
                     glPopMatrix();
                 }
                 glPopMatrix();

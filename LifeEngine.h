@@ -116,6 +116,10 @@ public:
         return field;
     }
 
+    std::list<std::vector<std::vector<bool>>*>* get_log(){
+        return &log;
+    }
+
     void print(){
         for(uint x = 1; x < size_x - 1; ++x){
             for(uint y = 1; y < size_y - 1; ++y){

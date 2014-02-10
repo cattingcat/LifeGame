@@ -37,7 +37,7 @@ public:
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(170, 170);
+        le = new LifeEngine(20, 20);
         gw->setField(le->get_field());
         oglg->setField(le->get_field());
 
@@ -64,13 +64,13 @@ private:
 
 private slots:
     void nextTimer(){
-        //clock_t c1 = clock();
+
         auto a = le->next();
-        //clock_t c2 = clock();
+
         gw->setField(a);
         oglg->setField(a);
-        //clock_t c3 = clock();
-        //std::cout<< "next(): " << c2 - c1 << "  setField(): " << c3 - c2 <<std::endl;
+        hw->setLog(le->get_log());
+
     }
 
     void randomize(){
