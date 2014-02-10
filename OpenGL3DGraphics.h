@@ -15,7 +15,7 @@ private:
     float angle_z;
     float z_cube_center;
     int cube_size;
-    std::list<std::vector<std::vector<bool>>*>* log;
+    std::list<std::vector<std::vector<bool>>>* log;
 
 public:
     HistoryWidget(QWidget* parent = 0): QGLWidget(parent){
@@ -159,7 +159,7 @@ private:
     }
 
     void drawLog(int sz){
-        int n = (**(log->begin())).size();
+        int n = log->begin()->size();
         float block = (float)sz / n;
         int margin = 1;
         glMatrixMode(GL_MODELVIEW);
@@ -169,7 +169,7 @@ private:
         typedef std::vector<std::vector<bool>> layer;
         float z_coord = sz;
         for(auto it = log->rbegin(); it != log->rend() && z_coord > 0 ; ++it, z_coord -= block){
-            layer* l = *it;
+            layer* l = &(*it);
             glPushMatrix();
             glTranslatef(0, 0, z_coord);
             for(int ix = 0; ix < n; ++ix){
@@ -192,7 +192,7 @@ private:
     }
 
 public:
-    void setLog(std::list<std::vector<std::vector<bool>>*>* l){
+    void setLog(std::list<std::vector<std::vector<bool>>>* l){
         log = l;
         repaint();
     }
