@@ -10,12 +10,14 @@ class OpenGLGraphics: public QGLWidget {
 private:
     int w;
     int h;
+    int w_min;
+    int h_min;
     std::vector<std::vector<bool>>* _field;
 
 public:
     OpenGLGraphics(QWidget* parent = 0): QGLWidget(parent), _field(nullptr){
-        w = 1000;
-        h = 1000;
+        w_min = 1000;
+        h_min = 1000;
     }
 
 protected:
@@ -25,16 +27,18 @@ protected:
     }
 
     virtual void resizeGL(int width, int height) override{
+        w = w_min;
+        h = w_min;
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glViewport(0, 0, width, height);
         float tmp = (float)width / height;
         if(width > height){
-            glOrtho(0, w * tmp, h, 0, -1, 1);
-            //w = (float)w * tmp;
+            w = (float)w * tmp;
+            glOrtho(0, w, h, 0, -1, 1);
         } else {
-            glOrtho(0, w, h * tmp, 0, -1, 1);
-            //h = (float)h * tmp;
+            h = (float)h * tmp;
+            glOrtho(0, w, h, 0, -1, 1);
         }
     }
 

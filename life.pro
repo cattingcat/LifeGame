@@ -19,7 +19,7 @@ HEADERS  += mainwindow.h \
     graphicswidget.h \
     OpenGLGraphics.h \
     LifeEngine.h \
-    ogl_history.h
+    OpenGL3DGraphics.h
 
 FORMS    += mainwindow.ui
 

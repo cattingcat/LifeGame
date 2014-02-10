@@ -10,7 +10,7 @@
 #include "OpenGLGraphics.h"
 #include <LifeEngine.h>
 #include <ctime>
-#include <ogl_history.h>
+#include <OpenGL3DGraphics.h>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT    

@@ -1,5 +1,5 @@
-#ifndef OGL_HISTORY_H
-#define OGL_HISTORY_H
+#ifndef OGL_3D
+#define OGL_3D
 #include <QGLWidget>
 #include <QKeyEvent>
 #include <GL/glu.h>
@@ -13,32 +13,23 @@ private:
     float angle_x;
     float angle_y;
     float angle_z;
-
-    float z;
-
-    int c_size;
-
+    float z_cube_center;
+    int cube_size;
     std::list<std::vector<std::vector<bool>>*>* log;
 
 public:
     HistoryWidget(QWidget* parent = 0): QGLWidget(parent){
         angle_x = 0.0f;
-        angle_y =  0.0f;
+        angle_y = 0.0f;
         angle_z = 0.0f;
-        z = -250.0f;
+        z_cube_center = -250.0f;
         log = nullptr;
         this->setFocusPolicy(Qt::StrongFocus);
     }
 
-    void setLog(std::list<std::vector<std::vector<bool>>*>* l){
-        log = l;
-        repaint();
-    }
-
 protected:
     virtual void initializeGL() override {
-        glClearColor(0, 0, 0.5f, 1.0f);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -57,8 +48,7 @@ protected:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
-
+        /*
         glColor4ub(1, 100, 1, 50);
         glBegin(GL_LINES);
             glVertex3i(-1000, -10, -20);
@@ -66,16 +56,15 @@ protected:
             glVertex3i(0, -10, -1000);
             glVertex3i(0, -10, 1000);
         glEnd();
-
-
-        glTranslatef(0, 0, z);
+        */
+        glTranslatef(0, 0, z_cube_center);
         glRotatef(angle_x, 1.0f, 0.0f, 0.0f);
         glRotatef(angle_y, 0.0f, 1.0f, 0.0f);
         glRotatef(angle_z, 0.0f, 0.0f, 1.0f);
         if(log == nullptr){
             drawRandomMultiCube(200, 20);
         } else {
-            drawLog(200);
+            drawLog(250);
         }
     }
 
@@ -94,9 +83,9 @@ protected:
         } else if(k == Qt::Key_E){
             angle_z -= 2.f;
         } else if(k == Qt::Key_Up){
-            z += 5;
+            z_cube_center += 5;
         } else if(k == Qt::Key_Down){
-            z -= 5;
+            z_cube_center -= 5;
         }
         repaint();
     }
@@ -173,32 +162,26 @@ private:
         int n = (**(log->begin())).size();
         float block = (float)sz / n;
         int margin = 1;
-
         glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
-        glTranslated(-sz / 2.0, -sz / 2.0, -sz / 2.0);
-        // TODO
+        glTranslated(-sz / 2.0, sz / 2.0, -sz / 2.0);
+        glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
         typedef std::vector<std::vector<bool>> layer;
-        float iz = 0.0f;
-        for(auto it = log->rbegin(); it != log->rend() && iz < sz ; ++it, iz += block){
+        float z_coord = sz;
+        for(auto it = log->rbegin(); it != log->rend() && z_coord > 0 ; ++it, z_coord -= block){
             layer* l = *it;
-            std::cout<< l->size() << " " << l->begin()->size() << std::endl;
-
             glPushMatrix();
-            glTranslatef(0, 0, iz);
-
+            glTranslatef(0, 0, z_coord);
             for(int ix = 0; ix < n; ++ix){
                 glPushMatrix();
                 glTranslatef(ix * block, 0.0f, 0.0f);
                 for(int iy = 0; iy < n; ++iy){
                     glPushMatrix();
                     glTranslatef(0.0f, iy * block, 0.0f);
-
                     if((*l)[iy][ix]){
-                        glColor3ub((int)(ix * block) % 255, (int)(iy * block) % 255, (int)iz % 255);
+                        glColor3ub((int)(ix * block) % 255, (int)(iy * block) % 255, (int)z_coord % 255);
                         drawCude(block - margin);
                     }
-
                     glPopMatrix();
                 }
                 glPopMatrix();
@@ -208,6 +191,11 @@ private:
         glPopMatrix();
     }
 
+public:
+    void setLog(std::list<std::vector<std::vector<bool>>*>* l){
+        log = l;
+        repaint();
+    }
 };
 
 #endif
