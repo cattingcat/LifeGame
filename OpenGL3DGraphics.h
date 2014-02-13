@@ -30,6 +30,11 @@ protected:
     virtual void initializeGL() override {
         glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_COLOR_MATERIAL);
+
+        GLfloat light[] = {.5f, .5f, .3f, 1.0f};
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light);
     }
 
     virtual void resizeGL(int w, int h) override {
@@ -146,6 +151,7 @@ private:
                     glPushMatrix();
                     glTranslated(0, 0, iz);
                     if(qrand() % 2){
+                        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
                         glColor3ub((int)ix % 255, (int)iy % 255, (int)iz % 255);
                         drawCude(block - margin);
                     }

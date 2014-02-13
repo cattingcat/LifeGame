@@ -37,7 +37,7 @@ public:
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(20, 20);
+        le = new LifeEngine(30, 30);
         gw->setField(le->get_field());
         oglg->setField(le->get_field());
 
