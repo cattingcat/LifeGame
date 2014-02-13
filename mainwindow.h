@@ -25,19 +25,26 @@ private:
 public:
     MainWindow(QWidget *parent = 0): QMainWindow(parent), ui(new Ui::MainWindow){
         ui->setupUi(this);
+
         gw = new GraphicsWidget();
-        ui->verticalLayout->addWidget(gw);
+        QVBoxLayout *l1 = new QVBoxLayout();
+        l1->addWidget(gw);
+        ui->tab_1->setLayout(l1);
 
         oglg = new OpenGLGraphics();
-        ui->tab2Layout->addWidget(oglg);
+        QVBoxLayout *l2 = new QVBoxLayout();
+        l2->addWidget(oglg);
+        ui->tab_2->setLayout(l2);
 
         hw = new HistoryWidget();
-        ui->tab3Layout->addWidget(hw);
+        QVBoxLayout *l3 = new QVBoxLayout();
+        l3->addWidget(hw);
+        ui->tab_3->setLayout(l3);
 
         timer = new QTimer(this);
         timer->setInterval(100);
 
-        le = new LifeEngine(30, 30);
+        le = new LifeEngine(20, 20);
         gw->setField(le->get_field());
         oglg->setField(le->get_field());
 
@@ -45,6 +52,7 @@ public:
         connect(ui->actionStart, SIGNAL(triggered()), timer, SLOT(start()));
         connect(ui->actionStop, SIGNAL(triggered()), timer, SLOT(stop()));
         connect(ui->actionRandomize, SIGNAL(triggered()), this, SLOT(randomize()));
+        connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(wfs()));
     }
 
     ~MainWindow(){
@@ -75,6 +83,11 @@ private slots:
     void randomize(){
         auto field = le->get_field();
         randomizeField(field);
+    }
+
+    void wfs(){
+        std::cout << "show" <<std::endl;
+        oglg->showFullScreen();
     }
 };
 

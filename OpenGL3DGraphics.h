@@ -16,6 +16,8 @@ private:
     int cube_size;
     std::list<std::vector<std::vector<bool>>>* log;
 
+    int last_mouse_x, last_mouse_y;
+
 public:
     HistoryWidget(QWidget* parent = 0): QGLWidget(parent){
         angle_x = 0.0f;
@@ -24,16 +26,19 @@ public:
         z_cube_center = -250.0f;
         log = nullptr;
         this->setFocusPolicy(Qt::StrongFocus);
+
+        last_mouse_x = 0;
+        last_mouse_y = 0;
     }
 
 protected:
     virtual void initializeGL() override {
-        glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
 
-        GLfloat light[] = {.5f, .5f, .3f, 1.0f};
+        GLfloat light[] = {.7f, .7f, 0.0f, 1.0f};
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light);
     }
 
@@ -66,7 +71,7 @@ protected:
         glRotatef(angle_y, 0.0f, 1.0f, 0.0f);
         glRotatef(angle_z, 0.0f, 0.0f, 1.0f);
         if(log == nullptr){
-            drawRandomMultiCube(200, 20);
+            drawRandomMultiCube(200, 10);
         } else {
             drawLog(250);
         }
@@ -94,8 +99,22 @@ protected:
         repaint();
     }
 
-    virtual void mousePressEvent(QMouseEvent *) override {
-        //TODO
+    virtual void mousePressEvent(QMouseEvent *e) override {
+        last_mouse_x = e->x();
+        last_mouse_y = e->y();
+    }
+
+    virtual void mouseMoveEvent(QMouseEvent *e) override {
+        int x = e->x();
+        int y = e->y();
+
+        if(last_mouse_x != 0 && last_mouse_y != 0){
+            angle_y += (x - last_mouse_x) * .1f;
+            angle_x += (y - last_mouse_y) * .1f;
+        }
+        last_mouse_x = x;
+        last_mouse_y = y;
+        repaint();
     }
 
 private:
