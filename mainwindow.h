@@ -59,6 +59,7 @@ public:
         delete ui;
         delete le;
     }
+
 private:
     void randomizeField(std::vector<std::vector<bool>>* field){
         int columns = field->size();

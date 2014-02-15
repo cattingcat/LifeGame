@@ -38,8 +38,14 @@ protected:
         glEnable(GL_LIGHTING);
         glEnable(GL_COLOR_MATERIAL);
 
-        GLfloat light[] = {.7f, .7f, 0.0f, 1.0f};
-        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light);
+        //GLfloat light[] = {.7f, .7f, 0.0f, 1.0f};
+        //glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light);
+
+        GLfloat amb_light[] = {0.1f, 0.1f, 0.1f, 1.0f};
+        GLfloat diff_light[] = {0.7f, 0.7f, 0.7f, 1.0f};
+        glLightfv(GL_LIGHT0, GL_AMBIENT, amb_light);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, diff_light);
+        glEnable(GL_LIGHT0);
     }
 
     virtual void resizeGL(int w, int h) override {
@@ -66,7 +72,12 @@ protected:
             glVertex3i(0, -10, 1000);
         glEnd();
         */
+
         glTranslatef(0, 0, z_cube_center);
+
+        GLfloat l0_pos[] = {0, 0, 0, 1.0f};
+        glLightfv(GL_LIGHT0, GL_POSITION, l0_pos);
+
         glRotatef(angle_x, 1.0f, 0.0f, 0.0f);
         glRotatef(angle_y, 0.0f, 1.0f, 0.0f);
         glRotatef(angle_z, 0.0f, 0.0f, 1.0f);
@@ -121,31 +132,37 @@ private:
     void drawCude(int sz){
         glBegin(GL_QUADS);
 
+        glNormal3f(0.0f, 0.0f, -1.0f);
         glVertex3i(0, 0, 0);
         glVertex3i(0, sz, 0);
         glVertex3i(sz, sz, 0);
         glVertex3i(sz, 0, 0);
 
+        glNormal3f(-1.0f, 0.0f, 0.0f);
         glVertex3i(0, 0, 0);
         glVertex3i(0, 0, sz);
         glVertex3i(0, sz, sz);
         glVertex3i(0, sz, 0);
 
+        glNormal3f(0.0f, -1.0f, 0.0f);
         glVertex3i(0, 0, 0);
         glVertex3i(sz, 0, 0);
         glVertex3i(sz, 0, sz);
         glVertex3i(0, 0, sz);
 
+        glNormal3f(0.0f, 1.0f, 0.0f);
         glVertex3i(sz, sz, sz);
         glVertex3i(sz, sz, 0);
         glVertex3i(0, sz, 0);
         glVertex3i(0, sz, sz);
 
+        glNormal3f(0.0f, 0.0f, 1.0f);
         glVertex3i(sz, sz, sz);
         glVertex3i(0, sz ,sz);
         glVertex3i(0, 0, sz);
         glVertex3i(sz, 0, sz);
 
+        glNormal3f(1.0f, 0.0f, 0.0f);
         glVertex3i(sz, sz, sz);
         glVertex3i(sz, 0, sz);
         glVertex3i(sz, 0, 0);
