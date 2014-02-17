@@ -43,8 +43,10 @@ protected:
 
         GLfloat amb_light[] = {0.1f, 0.1f, 0.1f, 1.0f};
         GLfloat diff_light[] = {0.7f, 0.7f, 0.7f, 1.0f};
+        GLfloat spec_light[] = {1.0f, 1.0f, 1.0f, 1.0f};
         glLightfv(GL_LIGHT0, GL_AMBIENT, amb_light);
         glLightfv(GL_LIGHT0, GL_DIFFUSE, diff_light);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, spec_light);
         glEnable(GL_LIGHT0);
     }
 
@@ -187,7 +189,10 @@ private:
                     glPushMatrix();
                     glTranslated(0, 0, iz);
                     if(qrand() % 2){
+                        GLfloat spec[] = {1.0f, 1.0f, 1.0f, 1.0f};
                         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+                        glMaterialfv(GL_FRONT, GL_SPECULAR, spec);
+                        glMateriali(GL_FRONT, GL_SHININESS, 128);
                         glColor3ub((int)ix % 255, (int)iy % 255, (int)iz % 255);
                         drawCude(block - margin);
                     }
